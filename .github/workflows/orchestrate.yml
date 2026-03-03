@@ -1,0 +1,82 @@
+name: Orchestrate Agents
+
+on:
+  repository_dispatch:
+    types:
+      - trigger-jules
+      - trigger-copilot
+      - trigger-opencode
+      - trigger-all
+  workflow_dispatch:
+    inputs:
+      agent:
+        description: 'Agent to trigger (jules, copilot, opencode, all)'
+        required: true
+        default: 'all'
+      target_repo:
+        description: 'Target repository (owner/repo)'
+        required: true
+      task:
+        description: 'Task description for the agent'
+        required: true
+
+jobs:
+  orchestrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+      
+      - name: Install dependencies
+        run: uv sync
+      
+      - name: Determine agent to trigger
+        id: agent
+        run: |
+          if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
+            EVENT_TYPE="${{ github.event.action }}"
+            if [[ "$EVENT_TYPE" == trigger-* ]]; then
+              AGENT="${EVENT_TYPE#trigger-}"
+            else
+              AGENT="all"
+            fi
+          else
+            AGENT="${{ github.event.inputs.agent }}"
+          fi
+          echo "agent=$AGENT" >> $GITHUB_OUTPUT
+          echo "target_repo=${{ github.event.client_payload.target_repo || github.event.inputs.target_repo }}" >> $GITHUB_OUTPUT
+          echo "task=${{ github.event.client_payload.task || github.event.inputs.task }}" >> $GITHUB_OUTPUT
+      
+      - name: Run orchestrator
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AGENT: ${{ steps.agent.outputs.agent }}
+          TARGET_REPO: ${{ steps.agent.outputs.target_repo }}
+          TASK: ${{ steps.agent.outputs.task }}
+        run: |
+          uv run python -c "
+          import asyncio
+          from overlord.orchestrator import AgentOrchestrator
+          
+          async def main():
+              orchestrator = AgentOrchestrator()
+              # TODO: Implement actual orchestration logic
+              print(f'Triggering agent: {AGENT}')
+              print(f'Target repo: {TARGET_REPO}')
+              print(f'Task: {TASK}')
+          
+          asyncio.run(main())
+          "
+      
+      - name: Trigger downstream workflows
+        if: steps.agent.outputs.agent != 'all'
+        run: |
+          echo "Triggering ${{ steps.agent.outputs.agent }} for ${{ steps.agent.outputs.target_repo }}"
+          # TODO: Add actual API calls to trigger agents

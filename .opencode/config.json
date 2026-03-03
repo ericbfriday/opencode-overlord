@@ -1,0 +1,28 @@
+{
+  "plugins": [
+    {
+      "name": "oh-my-opencode",
+      "enabled": true,
+      "config": {
+        "orchestration": {
+          "enabled": true,
+          "coordinator_repo": "ericbfriday/opencode-overlord"
+        },
+        "agents": {
+          "jules": {
+            "enabled": true,
+            "trigger_via": "github_actions"
+          },
+          "copilot": {
+            "enabled": true,
+            "trigger_via": "github_api"
+          },
+          "opencode": {
+            "enabled": true,
+            "trigger_via": "github_actions"
+          }
+        }
+      }
+    }
+  ]
+}
