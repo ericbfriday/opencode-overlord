@@ -16,7 +16,7 @@ class AgentOrchestrator:
         self.agents[name] = config
         logger.info("agent_registered", name=name)
 
-    async def trigger_agent(self, name: str, task: str) -> dict:
+    async def trigger_agent(self, name: str, task: str) -> dict[str, str]:
         """Trigger an AI agent to perform a task."""
         if name not in self.agents:
             raise ValueError(f"Unknown agent: {name}")

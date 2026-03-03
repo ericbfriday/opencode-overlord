@@ -42,6 +42,13 @@ htmlcov/
 *.swo
 *~
 
+# Ruff
+.ruff_cache/
+
+# OpenCode
+.opencode/node_modules/
+.opencode/bun.lock
+
 # uv
 .uv/
 

@@ -25,18 +25,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      
+
       - name: Install uv
         uses: astral-sh/setup-uv@v4
-      
+
       - name: Install dependencies
         run: uv sync
-      
+
       - name: Determine agent to trigger
         id: agent
         run: |
@@ -53,7 +53,7 @@ jobs:
           echo "agent=$AGENT" >> $GITHUB_OUTPUT
           echo "target_repo=${{ github.event.client_payload.target_repo || github.event.inputs.target_repo }}" >> $GITHUB_OUTPUT
           echo "task=${{ github.event.client_payload.task || github.event.inputs.task }}" >> $GITHUB_OUTPUT
-      
+
       - name: Run orchestrator
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -63,18 +63,19 @@ jobs:
         run: |
           uv run python -c "
           import asyncio
+          import os
           from overlord.orchestrator import AgentOrchestrator
-          
+
           async def main():
               orchestrator = AgentOrchestrator()
               # TODO: Implement actual orchestration logic
-              print(f'Triggering agent: {AGENT}')
-              print(f'Target repo: {TARGET_REPO}')
-              print(f'Task: {TASK}')
-          
+              print(f'Triggering agent: {os.environ[\"AGENT\"]}')
+              print(f'Target repo: {os.environ[\"TARGET_REPO\"]}')
+              print(f'Task: {os.environ[\"TASK\"]}')
+
           asyncio.run(main())
           "
-      
+
       - name: Trigger downstream workflows
         if: steps.agent.outputs.agent != 'all'
         run: |

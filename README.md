@@ -12,6 +12,9 @@ This repository houses the logic and GitHub Actions workflows to trigger and coo
 opencode-overlord/
 ├── .github/
 │   └── workflows/     # GitHub Actions for agent orchestration
+├── .opencode/         # OpenCode plugin configuration
+├── docs/
+│   └── research/      # Research and architecture documentation
 ├── src/
 │   └── overlord/      # Core orchestration logic
 ├── tests/             # Test suite
