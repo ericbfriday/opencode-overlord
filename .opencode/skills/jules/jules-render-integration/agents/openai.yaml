@@ -1,0 +1,4 @@
+interface:
+  display_name: "Jules Render Integration"
+  short_description: "Run Jules tasks from Render deployment workflows."
+  default_prompt: "Set up or troubleshoot Jules automation in a Render deployment pipeline and verify task triggers and execution behavior."

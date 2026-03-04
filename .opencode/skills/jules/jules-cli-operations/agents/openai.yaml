@@ -1,0 +1,4 @@
+interface:
+  display_name: "Jules CLI Operations"
+  short_description: "Run and manage Jules tasks from terminal workflows."
+  default_prompt: "Use the Jules CLI to run a clearly defined task against a repository, review the plan, and summarize the resulting branch and PR actions."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Jules REST API Operations"
+  short_description: "Automate Jules sessions through the documented REST API."
+  default_prompt: "Create and manage a Jules session through the REST API for a well-scoped task, then report status, activities, and next actions."

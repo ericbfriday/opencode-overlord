@@ -1,0 +1,4 @@
+interface:
+  display_name: "Jules SDK Operations"
+  short_description: "Use the official Jules TypeScript SDK and companion packages."
+  default_prompt: "Implement or update a Jules integration using @google/jules-sdk with typed session orchestration, streaming, and source/query APIs; use companion packages only when the workflow requires them."
