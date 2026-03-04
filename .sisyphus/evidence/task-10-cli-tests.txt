@@ -1,0 +1,23 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.14.0, pytest-9.0.2, pluggy-1.6.0 -- /Users/ericfriday/dev/opencode-overlord/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /Users/ericfriday/dev/opencode-overlord
+configfile: pyproject.toml
+plugins: anyio-4.12.1, respx-0.22.0, asyncio-1.3.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 12 items
+
+tests/test_cli.py::TestParseArgs::test_parse_dispatch_args PASSED        [  8%]
+tests/test_cli.py::TestParseArgs::test_parse_status_args PASSED          [ 16%]
+tests/test_cli.py::TestParseArgs::test_parse_merge_order_args PASSED     [ 25%]
+tests/test_cli.py::TestParseArgs::test_parse_enqueue_args PASSED         [ 33%]
+tests/test_cli.py::TestParseArgs::test_parse_enqueue_no_jump PASSED      [ 41%]
+tests/test_cli.py::TestMainDispatch::test_main_dispatch_returns_zero PASSED [ 50%]
+tests/test_cli.py::TestMainDispatch::test_main_dispatch_copilot PASSED   [ 58%]
+tests/test_cli.py::TestMainStatus::test_main_status_returns_zero PASSED  [ 66%]
+tests/test_cli.py::TestMainMergeOrder::test_main_merge_order_returns_zero PASSED [ 75%]
+tests/test_cli.py::TestMainEnqueue::test_main_enqueue_returns_zero PASSED [ 83%]
+tests/test_cli.py::TestMainErrorHandling::test_main_overlord_error_returns_one PASSED [ 91%]
+tests/test_cli.py::TestMainErrorHandling::test_main_unexpected_error_returns_one PASSED [100%]
+
+============================== 12 passed in 0.09s ==============================

@@ -1,0 +1,3 @@
+jules.py removed OK
+copilot.py removed OK
+opencode.py removed OK

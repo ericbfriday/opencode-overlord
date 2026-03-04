@@ -10,18 +10,32 @@ on:
   workflow_dispatch:
     inputs:
       agent:
-        description: 'Agent to trigger (jules, copilot, opencode, all)'
+        description: 'Agent to trigger (jules, copilot)'
         required: true
-        default: 'all'
+        default: 'jules'
       target_repo:
         description: 'Target repository (owner/repo)'
         required: true
       task:
         description: 'Task description for the agent'
         required: true
+  pull_request:
+    types: [opened, synchronize, closed]
+  merge_group:
+    types: [checks_requested]
+
+concurrency:
+  group: orchestrate-${{ github.event.inputs.target_repo || github.event.client_payload.target_repo || github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
 
 jobs:
-  orchestrate:
+  dispatch:
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -37,47 +51,60 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
-      - name: Determine agent to trigger
-        id: agent
+      - name: Determine agent inputs
+        id: inputs
         run: |
           if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
             EVENT_TYPE="${{ github.event.action }}"
             if [[ "$EVENT_TYPE" == trigger-* ]]; then
               AGENT="${EVENT_TYPE#trigger-}"
             else
-              AGENT="all"
+              AGENT="jules"
             fi
+            TARGET_REPO="${{ github.event.client_payload.target_repo }}"
+            TASK="${{ github.event.client_payload.task }}"
           else
             AGENT="${{ github.event.inputs.agent }}"
+            TARGET_REPO="${{ github.event.inputs.target_repo }}"
+            TASK="${{ github.event.inputs.task }}"
           fi
           echo "agent=$AGENT" >> $GITHUB_OUTPUT
-          echo "target_repo=${{ github.event.client_payload.target_repo || github.event.inputs.target_repo }}" >> $GITHUB_OUTPUT
-          echo "task=${{ github.event.client_payload.task || github.event.inputs.task }}" >> $GITHUB_OUTPUT
+          echo "target_repo=$TARGET_REPO" >> $GITHUB_OUTPUT
+          echo "task=$TASK" >> $GITHUB_OUTPUT
 
-      - name: Run orchestrator
+      - name: Dispatch task to agent
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          AGENT: ${{ steps.agent.outputs.agent }}
-          TARGET_REPO: ${{ steps.agent.outputs.target_repo }}
-          TASK: ${{ steps.agent.outputs.task }}
+          OVERLORD_GITHUB_TOKEN: ${{ secrets.OVERLORD_GITHUB_TOKEN }}
+          OVERLORD_JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
+          AGENT: ${{ steps.inputs.outputs.agent }}
+          TARGET_REPO: ${{ steps.inputs.outputs.target_repo }}
+          TASK: ${{ steps.inputs.outputs.task }}
         run: |
-          uv run python -c "
-          import asyncio
-          import os
-          from overlord.orchestrator import AgentOrchestrator
+          uv run python -m overlord.cli dispatch \
+            --agent "$AGENT" \
+            --repo "$TARGET_REPO" \
+            --task "$TASK"
 
-          async def main():
-              orchestrator = AgentOrchestrator()
-              # TODO: Implement actual orchestration logic
-              print(f'Triggering agent: {os.environ[\"AGENT\"]}')
-              print(f'Target repo: {os.environ[\"TARGET_REPO\"]}')
-              print(f'Task: {os.environ[\"TASK\"]}')
+  merge-order:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-          asyncio.run(main())
-          "
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
-      - name: Trigger downstream workflows
-        if: steps.agent.outputs.agent != 'all'
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Compute merge order
+        env:
+          OVERLORD_GITHUB_TOKEN: ${{ secrets.OVERLORD_GITHUB_TOKEN }}
         run: |
-          echo "Triggering ${{ steps.agent.outputs.agent }} for ${{ steps.agent.outputs.target_repo }}"
-          # TODO: Add actual API calls to trigger agents
+          uv run python -m overlord.cli merge-order \
+            --repo "${{ github.repository }}"

@@ -248,3 +248,14 @@
 - `.sisyphus/evidence/task-9-dispatch-routing.txt`
 - `.sisyphus/evidence/task-9-merge-order.txt`
 - `.sisyphus/evidence/task-9-full-suite.txt`
+
+## Task 11: Workflow rewrite + stub cleanup
+
+- Old stubs (jules.py, copilot.py, opencode.py) were safe to delete — confirmed not imported anywhere
+- `main.py` updated to import `AgentOrchestrator` from `overlord.orchestrator`
+- New workflow uses two jobs: `dispatch` (workflow_dispatch/repository_dispatch) and `merge-order` (pull_request)
+- `concurrency` group uses `||` fallback chain for target_repo across event types
+- `cancel-in-progress: false` — important for merge operations to not cancel in-flight work
+- YAML validated with `uv run python -c "import yaml; yaml.safe_load(...)"` (system `python` not in PATH)
+- mypy strict: 23 source files, 0 errors after stub deletion
+- All 69 tests still pass after cleanup
