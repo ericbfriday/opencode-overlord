@@ -1,0 +1,13 @@
+usage: overlord [-h] {dispatch,status,merge-order,enqueue} ...
+
+OpenCode Overlord CLI
+
+positional arguments:
+  {dispatch,status,merge-order,enqueue}
+    dispatch            Dispatch a task to an agent
+    status              Check status of a session
+    merge-order         Compute merge order for open PRs
+    enqueue             Enqueue a PR for merge
+
+options:
+  -h, --help            show this help message and exit

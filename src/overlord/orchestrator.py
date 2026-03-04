@@ -67,11 +67,23 @@ class AgentOrchestrator:
         repo: str,
         open_prs: list[PRReference],
     ) -> list[PRReference]:
-        """Compute topological merge order for a list of PRs."""
+        """Compute topological merge order for a list of PRs.
+
+        Parses Depends-On/Requires directives from PR bodies to build
+        the dependency graph before computing topological order.
+        """
         del owner, repo
         graph = PRDependencyGraph()
         for pr in open_prs:
             graph.add_pr(pr)
+            if pr.body:
+                deps = graph.parse_dependencies_from_body(
+                    pr.body,
+                    default_owner=pr.owner,
+                    default_repo=pr.repo,
+                )
+                if deps:
+                    graph.add_pr(pr, depends_on=deps)
 
         return graph.get_merge_order()
 
@@ -86,6 +98,7 @@ class AgentOrchestrator:
                     number=pr_ref.number,
                     node_id=node_id,
                     title=pr_ref.title,
+                    body=pr_ref.body,
                 )
 
             entry = await mq_client.enqueue_pr(pr_ref, jump=jump)

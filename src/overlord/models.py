@@ -49,6 +49,7 @@ class PRReference(BaseModel, frozen=True):
     number: int
     node_id: str | None = None
     title: str | None = None
+    body: str | None = None
 
 
 class MergeQueueEntry(BaseModel):
