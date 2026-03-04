@@ -1,6 +1,5 @@
 """Tests for OrchestratorConfig."""
 
-import os
 import pytest
 from pydantic import ValidationError
 
