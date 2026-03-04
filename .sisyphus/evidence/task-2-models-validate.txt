@@ -1,0 +1,4 @@
+{"name":"test","agent_type":"jules","endpoint":null,"api_key":null}
+{"task_id":"t1","description":"fix bug","target_repo":"owner/repo","target_branch":"main","agent_type":"jules"}
+{"owner":"me","repo":"proj","number":42,"node_id":null,"title":null}
+ALL OK

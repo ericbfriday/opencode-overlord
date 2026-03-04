@@ -1,0 +1,21 @@
+SCENARIO 1: Environment Variable Loading
+==========================================
+
+Command:
+OVERLORD_GITHUB_TOKEN=ghp_test123 OVERLORD_JULES_API_KEY=key456 uv run python -c "
+from overlord.config import OrchestratorConfig
+c = OrchestratorConfig()
+assert c.github_token == 'ghp_test123'
+assert c.jules_api_key == 'key456'
+assert c.jules_base_url == 'https://jules.googleapis.com/v1alpha'
+assert c.max_concurrent_sessions == 5
+print('CONFIG OK')"
+
+Result: CONFIG OK
+
+Verification:
+✓ github_token loaded from OVERLORD_GITHUB_TOKEN env var
+✓ jules_api_key loaded from OVERLORD_JULES_API_KEY env var
+✓ jules_base_url uses default value
+✓ max_concurrent_sessions uses default value (5)
+✓ All assertions passed

@@ -1,0 +1,22 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.14.0, pytest-9.0.2, pluggy-1.6.0 -- /Users/ericfriday/dev/opencode-overlord/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /Users/ericfriday/dev/opencode-overlord
+configfile: pyproject.toml
+plugins: anyio-4.12.1, respx-0.22.0, asyncio-1.3.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 10 items
+
+tests/test_merge_queue.py::test_enqueue_pr PASSED                        [ 10%]
+tests/test_merge_queue.py::test_enqueue_pr_with_jump PASSED              [ 20%]
+tests/test_merge_queue.py::test_enqueue_pr_missing_node_id PASSED        [ 30%]
+tests/test_merge_queue.py::test_get_pr_node_id PASSED                    [ 40%]
+tests/test_merge_queue.py::test_graphql_error_response PASSED            [ 50%]
+tests/test_merge_queue.py::test_check_merge_queue_enabled_true PASSED    [ 60%]
+tests/test_merge_queue.py::test_check_merge_queue_enabled_false PASSED   [ 70%]
+tests/test_merge_queue.py::test_get_pr_node_id_not_found PASSED          [ 80%]
+tests/test_merge_queue.py::test_enqueue_pr_http_error PASSED             [ 90%]
+tests/test_merge_queue.py::test_context_manager PASSED                   [100%]
+
+============================== 10 passed in 0.09s ==============================
+Success: no issues found in 1 source file

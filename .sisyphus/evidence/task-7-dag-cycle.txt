@@ -1,0 +1,2 @@
+PASS: DependencyCycleError raised: Circular dependency detected: ('nodes are in a cycle', [PRReference(owner='me', repo='proj', number=1, node_id=None, title=None), PRReference(owner='me', repo='proj', number=2, node_id=None, title=None), PRReference(owner='me', repo='proj', number=1, node_id=None, title=None)])
+has_cycle: True

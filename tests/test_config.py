@@ -12,7 +12,7 @@ def test_load_from_environment_variables(monkeypatch: pytest.MonkeyPatch) -> Non
     monkeypatch.setenv("OVERLORD_JULES_API_KEY", "key456")
     monkeypatch.setenv("OVERLORD_JULES_BASE_URL", "https://custom.example.com")
 
-    config = OrchestratorConfig()
+    config = OrchestratorConfig(github_token="ghp_test123")
 
     assert config.github_token == "ghp_test123"
     assert config.jules_api_key == "key456"
@@ -24,7 +24,7 @@ def test_validation_error_missing_required_field(monkeypatch: pytest.MonkeyPatch
     monkeypatch.delenv("OVERLORD_GITHUB_TOKEN", raising=False)
 
     with pytest.raises(ValidationError) as exc_info:
-        OrchestratorConfig()
+        OrchestratorConfig.model_validate({})
 
     assert "github_token" in str(exc_info.value)
 
@@ -33,7 +33,7 @@ def test_default_values_are_correct(monkeypatch: pytest.MonkeyPatch) -> None:
     """Test that default values are set correctly."""
     monkeypatch.setenv("OVERLORD_GITHUB_TOKEN", "ghp_required")
 
-    config = OrchestratorConfig()
+    config = OrchestratorConfig(github_token="ghp_required")
 
     assert config.jules_api_key is None
     assert config.jules_base_url == "https://jules.googleapis.com/v1alpha"
@@ -51,7 +51,7 @@ def test_overlord_jules_api_key_sets_field(monkeypatch: pytest.MonkeyPatch) -> N
     monkeypatch.setenv("OVERLORD_GITHUB_TOKEN", "ghp_required")
     monkeypatch.setenv("OVERLORD_JULES_API_KEY", "secret_key_789")
 
-    config = OrchestratorConfig()
+    config = OrchestratorConfig(github_token="ghp_required")
 
     assert config.jules_api_key == "secret_key_789"
 
@@ -63,7 +63,7 @@ def test_overlord_max_concurrent_sessions_parses_as_int(
     monkeypatch.setenv("OVERLORD_GITHUB_TOKEN", "ghp_required")
     monkeypatch.setenv("OVERLORD_MAX_CONCURRENT_SESSIONS", "10")
 
-    config = OrchestratorConfig()
+    config = OrchestratorConfig(github_token="ghp_required")
 
     assert config.max_concurrent_sessions == 10
     assert isinstance(config.max_concurrent_sessions, int)

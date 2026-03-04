@@ -1,0 +1,2 @@
+Linear chain merge order: [1, 2, 3]
+PASS: Linear chain test

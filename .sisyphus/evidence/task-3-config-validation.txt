@@ -1,0 +1,18 @@
+SCENARIO 2: Validation Error for Missing Required Field
+=========================================================
+
+Command (run WITHOUT OVERLORD_GITHUB_TOKEN in environment):
+uv run python -c "
+try:
+    from overlord.config import OrchestratorConfig
+    c = OrchestratorConfig()
+    print('FAIL: should have raised')
+except Exception as e:
+    print(f'CORRECTLY RAISED: {type(e).__name__}')"
+
+Result: CORRECTLY RAISED: ValidationError
+
+Verification:
+✓ ValidationError is raised when required github_token is missing
+✓ OrchestratorConfig cannot be instantiated without OVERLORD_GITHUB_TOKEN
+✓ Validation works as expected

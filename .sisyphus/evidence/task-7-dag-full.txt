@@ -1,0 +1,26 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.14.0, pytest-9.0.2, pluggy-1.6.0 -- /Users/ericfriday/dev/opencode-overlord/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /Users/ericfriday/dev/opencode-overlord
+configfile: pyproject.toml
+plugins: anyio-4.12.1, respx-0.22.0, asyncio-1.3.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 15 items
+
+tests/test_dag.py::TestGetMergeOrder::test_empty_graph PASSED            [  6%]
+tests/test_dag.py::TestGetMergeOrder::test_single_pr_no_deps PASSED      [ 13%]
+tests/test_dag.py::TestGetMergeOrder::test_linear_chain PASSED           [ 20%]
+tests/test_dag.py::TestGetMergeOrder::test_diamond PASSED                [ 26%]
+tests/test_dag.py::TestGetMergeOrder::test_isolated_nodes PASSED         [ 33%]
+tests/test_dag.py::TestCycleDetection::test_cycle_raises_dependency_cycle_error PASSED [ 40%]
+tests/test_dag.py::TestCycleDetection::test_has_cycle_returns_true PASSED [ 46%]
+tests/test_dag.py::TestCycleDetection::test_has_cycle_returns_false PASSED [ 53%]
+tests/test_dag.py::TestParseDependencies::test_depends_on_hash PASSED    [ 60%]
+tests/test_dag.py::TestParseDependencies::test_depends_on_url PASSED     [ 66%]
+tests/test_dag.py::TestParseDependencies::test_requires_shorthand PASSED [ 73%]
+tests/test_dag.py::TestParseDependencies::test_no_deps_in_body PASSED    [ 80%]
+tests/test_dag.py::TestParseDependencies::test_multiple_deps_mixed_formats PASSED [ 86%]
+tests/test_dag.py::TestGetReady::test_returns_no_dep_prs PASSED          [ 93%]
+tests/test_dag.py::TestGetReady::test_all_have_deps PASSED               [100%]
+
+============================== 15 passed in 0.06s ==============================

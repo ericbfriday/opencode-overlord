@@ -1,0 +1,5 @@
+  me/proj#42
+  acme/widgets#99
+  ext/lib#7
+Total deps parsed: 3
+PASS: Parse dependencies test
